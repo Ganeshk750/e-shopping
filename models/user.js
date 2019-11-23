@@ -46,3 +46,15 @@ UserSchema.methods.comparePassword = function(password){
     return bcrypt.compareSync(password,this.password);
 };
 
+/* Setups for gravatar */
+UserSchema.methods.gravatar = function(size){
+    if(!this.size) size = 200;
+    if(!this.email){
+        return 'https://gravatar.com/avatar/?s' + size + '&d=retro';
+    }else{
+        var md5 = crypto.createHash('md5').update(this.email).digest('hex');
+        return 'https://gravatar.com/avatar/' + md5 + '?s' + size + '&d=retro';
+    }
+}
+
+module.exports = mongoose.model('user', UserSchema);
