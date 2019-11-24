@@ -17,6 +17,9 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(cors());
 
+const userRoutes = require('./routes/accounts');
+app.use('/api/accounts', userRoutes);
+
 app.get('/', (req,res, next) =>{
     res.json({
         user: 'Ganesh'
@@ -24,5 +27,5 @@ app.get('/', (req,res, next) =>{
 });
 
 app.listen(config.port, err =>{
-    console.log('Server is running on port'+ config.port);
+    console.log('Server is running on port:'+ config.port);
 });
