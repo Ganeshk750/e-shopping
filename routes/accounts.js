@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const checkJWT = require('../middlewares/check-jwt');
 const User = require('../models/user');
 const config = require('../config');
 
@@ -69,4 +70,61 @@ router.post('/login',(req,res,next) =>{
         }
     });
 });
+
+/* Profile get and post api */
+router.route('/profile')
+      .get(checkJWT,(req,res,next) =>{
+          User.findOne({_id: req.decoded.user._id}, (err,user) =>{
+              res.json({
+                  success: true,
+                  user: user,
+                  message: "Successful"
+              });
+          });
+      })
+      .post(checkJWT,(req,res, next) =>{
+          User.findOne({_id:req.decoded.user._id}, (err,user) =>{
+              if(err) return next(err);
+              if(req.body.name) user.name = req.body.name;
+              if(req.body.email) user.email = req.body.email;
+              if(req.body.password) user.password = req.body.password;
+
+              user.isSeller = req.body.isSeller;
+              user.save();
+              res.json({
+                  success: true,
+                  message: 'Successfully edited your profile'
+              });
+          });
+      });
+
+      /* Address Api GET and POST */
+router.route('/address')
+      .get(checkJWT,(req,res,next) =>{
+          User.findOne({_id: req.decoded.user._id},(err,user) =>{
+              res.json({
+                  success: true,
+                  address: user.address,
+                  message: 'Successfull'
+              });
+          });
+      })
+      .post(checkJWT,(req,res,next) =>{
+          User.findOne({_id: req.decoded.user._id},(err,user) =>{
+              if(err) return next(err);
+              
+              if(req.body.add1) user.address.add1 = req.body.add1;
+              if(req.body.add2) user.address.add2 = req.body.add2;
+              if(req.body.city) user.address.city = req.body.city;
+              if(req.body.state) user.address.state = req.body.state;
+              if(req.body.country) user.address.country = req.body.country;
+              if(req.body.postalCode) user.address.postalCode = req.body.postalCode;
+
+              user.save();
+              res.json({
+                  success: true,
+                  message: 'Successfully added address'
+              });
+          });
+      });
 module.exports = router;
