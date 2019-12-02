@@ -18,6 +18,9 @@ app.use(bodyParser.urlencoded({ extended: false}));
 app.use(cors());
 
 const userRoutes = require('./routes/accounts');
+const mainRoutes = require('./routes/main');
+
+app.use('/api',mainRoutes);
 app.use('/api/accounts', userRoutes);
 
 app.get('/', (req,res, next) =>{
