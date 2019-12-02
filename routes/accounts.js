@@ -11,7 +11,7 @@ router.post('/signup',(req,res, next) =>{
     user.name = req.body.name;
     user.email = req.body.email;
     user.password = req.body.password;
-    user.picture = req.gravatar;
+    user.picture = user.gravatar();
     user.isSeller = req.body.isSeller;
 
     User.findOne({ email: req.body.email},(err, existingUser) =>{
@@ -63,7 +63,7 @@ router.post('/login',(req,res,next) =>{
 
                 res.json({
                     success: true,
-                    message: 'token is here',
+                    message: 'This is youe token',
                     token: token
                 });
             }
@@ -98,7 +98,7 @@ router.route('/profile')
           });
       });
 
-      /* Address Api GET and POST */
+/* Address Api GET and POST */
 router.route('/address')
       .get(checkJWT,(req,res,next) =>{
           User.findOne({_id: req.decoded.user._id},(err,user) =>{
@@ -113,8 +113,8 @@ router.route('/address')
           User.findOne({_id: req.decoded.user._id},(err,user) =>{
               if(err) return next(err);
               
-              if(req.body.add1) user.address.add1 = req.body.add1;
-              if(req.body.add2) user.address.add2 = req.body.add2;
+              if(req.body.addr1) user.address.addr1 = req.body.addr1;
+              if(req.body.addr2) user.address.addr2 = req.body.addr2;
               if(req.body.city) user.address.city = req.body.city;
               if(req.body.state) user.address.state = req.body.state;
               if(req.body.country) user.address.country = req.body.country;
